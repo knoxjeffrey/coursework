@@ -1,13 +1,6 @@
+require 'pry'
 class GameFlow
-  
-  require_relative 'text_format'
-  require_relative 'money_checker'
-  require_relative 'hand_total'
-  
-  include TextFormat
-  include MoneyChecker
-  include HandTotal
-  
+   
   NUMBER_OF_DECKS_FOR_GAME = 3
   BLACKJACK_AMOUNT = 21
   
@@ -43,7 +36,7 @@ class GameFlow
       TextFormat.print_string "...New deck is ready"
       sleep 2
     end
-  
+ 
     puts `clear`
     player.clear_hand
     dealer.clear_hand

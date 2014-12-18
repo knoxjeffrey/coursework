@@ -14,18 +14,18 @@ describe Bank do
   describe :deposit_money do
     
     it "should add the amount to the bank" do
-      bank = Bank.new(100)
-      bank.deposit_money(10)
-      expect(bank.bank).to eql(110)
+      bank_account = Bank.new(100)
+      bank_account.deposit_money(10)
+      expect(bank_account.bank).to eql(110)
     end
   end
   
   describe :withdraw_money do
     
     it "should add the amount to the bank" do
-      bank = Bank.new(100)
-      bank.withdraw_money(10)
-      expect(bank.bank).to eql(90)
+      bank_account = Bank.new(100)
+      bank_account.withdraw_money(10)
+      expect(bank_account.bank).to eql(90)
     end
   end
 end
