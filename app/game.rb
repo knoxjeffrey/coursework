@@ -1,29 +1,41 @@
-class GameFlow
-  
-  require_relative 'text_format'
-  require_relative 'money_checker'
-  require_relative 'hand_total'
-  
-  include TextFormat
-  include MoneyChecker
-  include HandTotal
-  
+class Game
+   
   NUMBER_OF_DECKS_FOR_GAME = 3
   BLACKJACK_AMOUNT = 21
+  
+  LOSING_MESSAGE = "Your account is empty...the house always wins!\nThanks for playing %s"
   
   attr_reader :player, :dealer, :blackjack_deck
   attr_accessor :bet_placed
   
   def initialize
-    puts `clear`
-    TextFormat.print_string "Welcome to this game of Blackjack.  Please enter your name:"
-    player_name = TextFormat.chomp_it
-    
-    @player = Player.new(player_name,100)
+    clear_screen_content
+    @player = Player.new(player_name, 100)
     @dealer = Dealer.new('Kryton')
     @blackjack_deck = DeckHandler.new
     @bet_placed = 0
   end
+  
+  def play
+    begin
+      if player.amount_in_account == 0
+        TextFormat.print_string LOSING_MESSAGE % player.name 
+        return
+      end
+      
+      run_game_sequence
+
+      begin
+        decision = UserInteraction.new("Would you like to play again?: Y or N").input
+      end while !TextFormat.entered_correct_choice?(decision)
+    end while decision.downcase == 'y'
+  
+    TextFormat.print_string "Thanks for playing #{player.name}" 
+  end
+  
+  
+  private
+  
   
   def show_cards_on_table(dealer_cards_held, player_cards_held)
     TextFormat.print_string "The dealers cards are:"
@@ -33,33 +45,31 @@ class GameFlow
     blackjack_deck.display_cards(player_cards_held)
   end
   
-  def game_setup
+  def setup_game
     TextFormat.print_string "#{player.name} you have £#{player.amount_in_account} in your account. Let's play!"
-  
-    puts `clear`
-    if (blackjack_deck.game_deck.size == 0) || (blackjack_deck.game_deck.size <= 30)
-      blackjack_deck.replenish_deck(NUMBER_OF_DECKS_FOR_GAME)
-
-      TextFormat.print_string "...New deck is ready"
-      sleep 2
-    end
-  
-    puts `clear`
+    clear_screen_content
+    fill_game_deck
+    clear_screen_content
     player.clear_hand
     dealer.clear_hand
-    begin
-      TextFormat.print_string "Place your bet! You have £#{player.amount_in_account} in your account"
-      self.bet_placed = gets.chomp
-    end while !MoneyChecker.correct_money_entered?(bet_placed, player.amount_in_account)
-  
-    puts `clear`
-  
-    2.times { player.receive_card(blackjack_deck.deal_card) }
-    2.times { dealer.receive_card(blackjack_deck.deal_card) }
-  
+    take_player_bet
+    clear_screen_content
+    deal_initial_cards
     dealer_hand_with_hole_card = [blackjack_deck.unturned_card, dealer.cards_held[1]]
     show_cards_on_table(dealer_hand_with_hole_card, player.cards_held)
-   
+  end
+  
+  def take_player_bet
+    begin
+      question = "Place your bet! You have £#{player.amount_in_account} in your account"
+      self.bet_placed = UserInteraction.new(question).input
+      raise "Bet placed was: #{bet_placed} (#{bet_placed.class})"
+    end while !MoneyChecker.correct_money_entered?(bet_placed, player.amount_in_account)
+  end
+  
+  def deal_initial_cards
+    2.times { player.receive_card(blackjack_deck.deal_card) }
+    2.times { dealer.receive_card(blackjack_deck.deal_card) }
   end
   
   def blackjack_on_first_draw?
@@ -93,12 +103,12 @@ class GameFlow
       break if HandTotal.card_total(player.cards_held) > BLACKJACK_AMOUNT
     
       begin
-        TextFormat.print_string "#{player.name}, would you like another card? Y or N"
-        decision = gets.chomp
+        question = "#{player.name}, would you like another card? Y or N"
+        decision = UserInteraction.new(question).value
       end while !TextFormat.entered_correct_choice?(decision)
     
       if decision.downcase == 'y'
-        puts `clear`
+        clear_screen_content
         player.receive_card(blackjack_deck.deal_card)
       end
 
@@ -106,7 +116,7 @@ class GameFlow
   end
   
   def dealer_round
-    puts `clear`
+    clear_screen_content
     loop do
       TextFormat.print_string "   ********** The dealer is playing... **********"
       show_cards_on_table(dealer.cards_held, player.cards_held)
@@ -114,7 +124,7 @@ class GameFlow
       break if dealer.is_dealer_sticking?(dealer_total)
       break if HandTotal.card_total(dealer.cards_held) > BLACKJACK_AMOUNT
       sleep 2
-      puts `clear`
+      clear_screen_content
 
       dealer.receive_card(blackjack_deck.deal_card)
     end 
@@ -132,42 +142,40 @@ class GameFlow
     end
   end
   
-  def game_sequence
+  def run_game_sequence
     
-      game_setup
-      return if blackjack_on_first_draw?
+    setup_game
+    return if blackjack_on_first_draw?
   
-      puts `clear`
+    clear_screen_content
   
-      player_round
-      return if is_player_bust?(player.cards_held)
+    player_round
+    return if is_player_bust?(player.cards_held)
     
-      dealer_round
-      return if is_dealer_bust?(dealer.cards_held)
+    dealer_round
+    return if is_dealer_bust?(dealer.cards_held)
       
-      sleep 1
-      puts `clear`
-      show_cards_on_table(dealer.cards_held, player.cards_held)
+    sleep 1
+    clear_screen_content
+    show_cards_on_table(dealer.cards_held, player.cards_held)
   
-      declare_result(bet_placed.to_i)
+    declare_result(bet_placed.to_i)
   end
   
-  def game
-    begin
-      if player.amount_in_account == 0
-        TextFormat.print_string "Your account is empty...the house always wins!"
-        TextFormat.print_string "Thanks for playing #{player.name}" 
-        return
-      end
-      
-      game_sequence
-
-      begin
-        TextFormat.print_string "Would you like to play again?: Y or N"
-        decision = gets.chomp
-      end while !TextFormat.entered_correct_choice?(decision)
-    end while decision.downcase == 'y'
-  
-    TextFormat.print_string "Thanks for playing #{player.name}" 
+  def clear_screen_content
+    puts `clear`
   end
+  
+  def player_name
+    UserInteraction.new("Welcome to this game of Blackjack. Please enter your name:").input
+  end
+  
+  def fill_game_deck
+    if blackjack_deck.game_deck.empty? || blackjack_deck.game_deck.size <= 30
+      blackjack_deck.replenish_deck(NUMBER_OF_DECKS_FOR_GAME)
+      TextFormat.print_string "...New deck is ready"
+      sleep 2
+    end
+  end 
+  
 end

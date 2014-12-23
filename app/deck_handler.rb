@@ -6,7 +6,7 @@ class DeckHandler
   
   def replenish_deck(number_of_decks)
     self.game_deck = []
-    number_of_decks.times { game_deck << Deck.new.deck }
+    number_of_decks.times { game_deck << Deck.new.cards }
     game_deck.flatten!(1).shuffle!
   end
   
@@ -28,18 +28,18 @@ class DeckHandler
   end
   
   def unturned_card
-    ['*','*']
+    Card.new("*", "*")
   end
   
   private
   
-  def make_card_image(card_array)
+  def make_card_image(card)
     card_image_array = []
     
     card_image_array << "┌─────┐"
-    card_image_array << "│#{card_array[1]}    │"
-    card_image_array << "│  #{card_array[0]}  │"
-    card_image_array << "│    #{card_array[1]}│"
+    card_image_array << "│#{card.value}    │"
+    card_image_array << "│  #{card.suit}  │"
+    card_image_array << "│    #{card.value}│"
     card_image_array << "└─────┘"
     
     card_image_array

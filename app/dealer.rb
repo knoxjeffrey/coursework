@@ -1,7 +1,5 @@
 class Dealer
-  
   require_relative 'hand'
-  
   include Hand
   
   attr_reader :name

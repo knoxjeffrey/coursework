@@ -1,4 +1,5 @@
 class Player
+  require_relative 'bank'
   include Hand
   
   attr_reader :name, :account
