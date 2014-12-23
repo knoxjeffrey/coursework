@@ -1,3 +1,4 @@
+require 'pry'
 class DeckHandler
   attr_accessor :game_deck
   def initialize
