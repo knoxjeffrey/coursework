@@ -1,4 +1,4 @@
-class GameFlow
+class Game
    
   NUMBER_OF_DECKS_FOR_GAME = 3
   BLACKJACK_AMOUNT = 21
@@ -16,7 +16,7 @@ class GameFlow
     @bet_placed = 0
   end
   
-  def game
+  def play
     begin
       if player.amount_in_account == 0
         TextFormat.print_string LOSING_MESSAGE % player.name 
@@ -37,7 +37,6 @@ class GameFlow
   private
   
   
-  
   def show_cards_on_table(dealer_cards_held, player_cards_held)
     TextFormat.print_string "The dealers cards are:"
     blackjack_deck.display_cards(dealer_cards_held)
@@ -48,26 +47,29 @@ class GameFlow
   
   def setup_game
     TextFormat.print_string "#{player.name} you have £#{player.amount_in_account} in your account. Let's play!"
-  
     clear_screen_content
     fill_game_deck
     clear_screen_content
     player.clear_hand
     dealer.clear_hand
-    begin
-      question = "Place your bet! You have £#{player.amount_in_account} in your account"
-      UserInteraction.new(question).input
-      self.bet_placed = UserInteraction.new(question).input
-    end while !MoneyChecker.correct_money_entered?(bet_placed, player.amount_in_account)
-  
+    take_player_bet
     clear_screen_content
-  
-    2.times { player.receive_card(blackjack_deck.deal_card) }
-    2.times { dealer.receive_card(blackjack_deck.deal_card) }
-  
+    deal_initial_cards
     dealer_hand_with_hole_card = [blackjack_deck.unturned_card, dealer.cards_held[1]]
     show_cards_on_table(dealer_hand_with_hole_card, player.cards_held)
-   
+  end
+  
+  def take_player_bet
+    begin
+      question = "Place your bet! You have £#{player.amount_in_account} in your account"
+      self.bet_placed = UserInteraction.new(question).input
+      raise "Bet placed was: #{bet_placed} (#{bet_placed.class})"
+    end while !MoneyChecker.correct_money_entered?(bet_placed, player.amount_in_account)
+  end
+  
+  def deal_initial_cards
+    2.times { player.receive_card(blackjack_deck.deal_card) }
+    2.times { dealer.receive_card(blackjack_deck.deal_card) }
   end
   
   def blackjack_on_first_draw?
@@ -101,8 +103,8 @@ class GameFlow
       break if HandTotal.card_total(player.cards_held) > BLACKJACK_AMOUNT
     
       begin
-        TextFormat.print_string "#{player.name}, would you like another card? Y or N"
-        decision = gets.chomp
+        question = "#{player.name}, would you like another card? Y or N"
+        decision = UserInteraction.new(question).value
       end while !TextFormat.entered_correct_choice?(decision)
     
       if decision.downcase == 'y'
