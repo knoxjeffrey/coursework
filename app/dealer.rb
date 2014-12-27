@@ -1,17 +1,22 @@
 class Dealer
-  require_relative 'hand'
-  include Hand
+  
+  require_relative 'acts_as_card_holder'
+  include ActsAsCardHolder
   
   attr_reader :name
-  attr_accessor :cards_held
   
   def initialize(name)
+    super
     @name = name
-    @cards_held = []
   end
   
-  def sticking?(total)
-    total.between?(18,21)
+  def sticking?
+    hand_total.between?(18,21)
   end
+  
+  def hand_with_hole_card 
+    [Card.unturned, cards_held[1]]
+  end
+  
 end
 

@@ -28,9 +28,6 @@ class DeckHandler
     end
   end
   
-  def unturned_card
-    Card.new("*", "*")
-  end
   
   private
   
