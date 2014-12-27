@@ -15,25 +15,25 @@ describe Dealer do
     end
   end
   
-  describe :is_dealer_sticking? do
+  describe :sticking? do
     it "should return true if the dealer total is 18" do
       new_dealer = Dealer.new('Kryton')
-      expect(new_dealer.is_dealer_sticking?(18)).to be true
+      expect(new_dealer.sticking?(18)).to be true
     end
     
     it "should return true if the dealer total is 21" do
       new_dealer = Dealer.new('Kryton')
-      expect(new_dealer.is_dealer_sticking?(21)).to be true
+      expect(new_dealer.sticking?(21)).to be true
     end
     
     it "should return false if the dealer total is 17" do
       new_dealer = Dealer.new('Kryton')
-      expect(new_dealer.is_dealer_sticking?(17)).to be false
+      expect(new_dealer.sticking?(17)).to be false
     end
     
     it "should return true if the dealer total is 22" do
       new_dealer = Dealer.new('Kryton')
-      expect(new_dealer.is_dealer_sticking?(22)).to be false
+      expect(new_dealer.sticking?(22)).to be false
     end
   end
   
