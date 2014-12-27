@@ -5,6 +5,7 @@ class Card
   
   attr_reader :suit, :value
   
+  # Convenience method. Creates a new, unturned card.
   def self.unturned
     new('*', '*')
   end
@@ -14,10 +15,16 @@ class Card
     @value = value
   end 
   
+  # The in-hand value of the Card. 
+  #
+  # Returns an Integer between 1 and 10
   def game_value
     [VALUES.index(value) + 2, 10].min
   end
   
+  # Is this Card an Ace?
+  #
+  # Returns true or false
   def ace?
     value == 'A'
   end

@@ -1,6 +1,7 @@
-require 'pry'
 class DeckHandler
+  
   attr_accessor :game_deck
+  
   def initialize
     @game_deck = []
   end
@@ -15,8 +16,10 @@ class DeckHandler
     game_deck.pop
   end
   
-  #this method allows the hand of cards to be printed horizontally on the screen. The top part of each card is held in card_images[0] down to the last part
-  #of each card being held in card_images[4]. Basically, builds a card image up line by line.
+  # This method allows the hand of cards to be printed horizontally on the screen. The
+  # top part of each card is held in card_images[0] down to the last part
+  # of each card being held in card_images[4]. Basically, builds a card image up line by
+  # line.
   def display_cards(card_array)
     card_images = [[],[],[],[],[]]
     card_array.each do |card|
@@ -31,15 +34,15 @@ class DeckHandler
   
   private
   
+  
   def make_card_image(card)
-    card_image_array = []
-    
-    card_image_array << "┌─────┐"
-    card_image_array << "│#{card.value}    │"
-    card_image_array << "│  #{card.suit}  │"
-    card_image_array << "│    #{card.value}│"
-    card_image_array << "└─────┘"
-    
-    card_image_array
+    [].tap do |card_image_array|
+      card_image_array << "┌─────┐"
+      card_image_array << "│#{card.value}    │"
+      card_image_array << "│  #{card.suit}  │"
+      card_image_array << "│    #{card.value}│"
+      card_image_array << "└─────┘"      
+    end
   end
+  
 end
