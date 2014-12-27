@@ -63,7 +63,7 @@ class Game
     begin
       question = "Place your bet! You have £#{player.amount_in_account} in your account"
       self.bet_placed = UserInteraction.new(question).input
-      raise "Bet placed was: #{bet_placed} (#{bet_placed.class})"
+      #raise "Bet placed was: #{bet_placed} (#{bet_placed.class})"
     end while !MoneyChecker.correct_money_entered?(bet_placed, player.amount_in_account)
   end
   
@@ -104,7 +104,7 @@ class Game
     
       begin
         question = "#{player.name}, would you like another card? Y or N"
-        decision = UserInteraction.new(question).value
+        decision = UserInteraction.new(question).input
       end while !TextFormat.entered_correct_choice?(decision)
     
       if decision.downcase == 'y'

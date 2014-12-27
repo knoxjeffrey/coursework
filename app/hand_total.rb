@@ -2,7 +2,7 @@ module HandTotal
   
   #returns a value with the hand total in it. 
   def self.card_total(cards_held_array)
-    value_array = cards_held_array.map { |v| v[1] }
+    value_array = cards_held_array.map { |v| v.value }
     card_value_counter = 0
   
     value_array.each do |value|
