@@ -10,8 +10,8 @@ class Dealer
     @cards_held = []
   end
   
-  def is_dealer_sticking?(dealer_total)
-    dealer_total.between?(18,21)
+  def sticking?(total)
+    total.between?(18,21)
   end
 end
 

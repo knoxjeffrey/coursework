@@ -121,7 +121,7 @@ class Game
       TextFormat.print_string "   ********** The dealer is playing... **********"
       show_cards_on_table(dealer.cards_held, player.cards_held)
       dealer_total = HandTotal.card_total(dealer.cards_held)
-      break if dealer.is_dealer_sticking?(dealer_total)
+      break if dealer.sticking?(dealer_total)
       break if HandTotal.card_total(dealer.cards_held) > BLACKJACK_AMOUNT
       sleep 2
       clear_screen_content
