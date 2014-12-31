@@ -1,19 +1,28 @@
 class Dealer
   
-  require_relative 'hand'
-  
-  include Hand
+  require_relative 'acts_as_card_holder'
+
+  include ActsAsCardHolder
   
   attr_reader :name
-  attr_accessor :cards_held
   
   def initialize(name)
     @name = name
-    @cards_held = []
   end
   
-  def is_dealer_sticking?(dealer_total)
-    dealer_total.between?(18,21)
+  # Is the Dealer going to "stick" with his current Cards?
+  #
+  # Returns true if the hand_total is between 18 and 21
+  def sticking?
+    hand_total.between?(18,21)
   end
+  
+  # A "hand" for the Dealer with an unturned Card
+  #
+  # Returns an Array of Cards
+  def hand_with_hole_card 
+    [Card.unturned, cards_held[1]]
+  end
+  
 end
 

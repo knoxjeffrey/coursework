@@ -58,10 +58,10 @@ end
 
 def display_cards_on_table(player_card_array, dealer_card_array, player_name)
   print_string "The dealers cards are:"
-  dealer_card_array.each { |card_array| puts "#{card_array[1]} of #{card_array[0]}"}
+  dealer_card_array.each { |card| puts "#{card.value} of #{card.suit}"}
   
   print_string "#{player_name}'s cards are:"
-  player_card_array.each { |card_array| puts "#{card_array[1]} of #{card_array[0]}"}
+  player_card_array.each { |card| puts "#{card.value} of #{card.suit}"}
 end
 
 #returns a value with the hand total in it. 

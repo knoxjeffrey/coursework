@@ -1,14 +1,11 @@
 class Deck
-  attr_reader :deck
+  
+  require_relative 'card'
+  attr_reader :cards
 
   def initialize
-    @deck = []
-    @suits_and_values = Cards.new
-    @card = @suits_and_values.suits.each do |suit|
-      @suits_and_values.values.each do |value|
-        @deck << [suit, value]
-      end
-    end
+    suits_and_values = Card::SUITS.product(Card::VALUES)
+    @cards = suits_and_values.map { |suit_and_value| Card.new(suit_and_value[0], suit_and_value[1]) }
   end
-  
+
 end

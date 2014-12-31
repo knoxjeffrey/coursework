@@ -1,13 +1,15 @@
 class Player
-  include Hand
   
+  require_relative 'bank'
+  require_relative 'acts_as_card_holder'
+
+  include ActsAsCardHolder
+
   attr_reader :name, :account
-  attr_accessor :cards_held
   
   def initialize(name, amount_in_bank)
     @name = name
     @account = Bank.new(amount_in_bank)
-    @cards_held = []
   end
   
   def amount_in_account
@@ -21,4 +23,5 @@ class Player
   def lose_money(amount)
     account.withdraw_money(amount)
   end
+  
 end

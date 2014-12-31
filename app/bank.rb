@@ -1,4 +1,5 @@
 class Bank
+  
   attr_accessor :bank
   
   def initialize(how_much_in_account)
@@ -12,4 +13,5 @@ class Bank
   def withdraw_money(amount)
     self.bank -= amount
   end
+  
 end
